@@ -13,13 +13,15 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-const DATA_FILE = path.join(__dirname, 'data', 'attendance.json');
+const IS_VERCEL = process.env.VERCEL || process.env.NOW_REGION;
+const DEFAULT_DATA_FILE = path.join(__dirname, 'data', 'attendance.json');
+const DATA_FILE = IS_VERCEL ? path.join('/tmp', 'attendance.json') : DEFAULT_DATA_FILE;
 
-// Helper to get real active Wi-Fi or LAN network IP address
+let memoryStore = null;
+
+// Helper to real active Wi-Fi or LAN network IP address
 function getLocalNetworkIp() {
   const interfaces = os.networkInterfaces();
-  
-  // First priority: look for Wi-Fi or Ethernet with 192.168.x (excluding virtualbox 192.168.56.x)
   for (const name of Object.keys(interfaces)) {
     const isWifi = /wi-?fi|wlan/i.test(name);
     for (const net of interfaces[name]) {
@@ -28,6 +30,8 @@ function getLocalNetworkIp() {
       }
     }
   }
+  return 'localhost';
+}
 
 // Helper to get public or LAN URL
 function getBaseUrl(req) {
@@ -36,6 +40,9 @@ function getBaseUrl(req) {
   }
   if (process.env.RENDER_EXTERNAL_URL) {
     return process.env.RENDER_EXTERNAL_URL.replace(/\/$/, '');
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
   }
   if (req && req.headers && req.headers['x-forwarded-host']) {
     const proto = req.headers['x-forwarded-proto'] || 'https';
@@ -51,15 +58,22 @@ function getBaseUrl(req) {
 
 // Helper to read and write database
 function loadData() {
+  if (memoryStore) return memoryStore;
   try {
     if (fs.existsSync(DATA_FILE)) {
       const raw = fs.readFileSync(DATA_FILE, 'utf8');
-      return JSON.parse(raw);
+      memoryStore = JSON.parse(raw);
+      return memoryStore;
+    } else if (fs.existsSync(DEFAULT_DATA_FILE)) {
+      const raw = fs.readFileSync(DEFAULT_DATA_FILE, 'utf8');
+      memoryStore = JSON.parse(raw);
+      saveData(memoryStore);
+      return memoryStore;
     }
   } catch (err) {
     console.error('Error reading data file:', err);
   }
-  return {
+  memoryStore = {
     meeting: {
       projectName: "Al Rahayel Stormwater Network Extension",
       employer: "AD Ports Groups",
@@ -67,15 +81,17 @@ function loadData() {
       contractor: "Desert Man Transporting & Contracting L.L.C",
       meetingRefNo: "Summer Safety Arrangements and Welfare Audit Opening Meeting",
       meetingTitle: "Summer Safety Arrangements Audit Opening Meeting",
-      meetingDate: "09 Sep- 2026",
+      meetingDate: "21 Sep- 2026",
       meetingTime: "9:00 AM",
       meetingOrganizer: "Mukhtiar Hussain"
     },
     attendees: []
   };
+  return memoryStore;
 }
 
 function saveData(data) {
+  memoryStore = data;
   try {
     const dir = path.dirname(DATA_FILE);
     if (!fs.existsSync(dir)) {
@@ -378,12 +394,16 @@ app.get('/attend', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'attend.html'));
 });
 
-// Start server
-app.listen(PORT, '0.0.0.0', () => {
-  const lanIp = getLocalNetworkIp();
-  console.log(`=======================================================`);
-  console.log(`🚀 QR Attendance System is live and listening!`);
-  console.log(`📋 Admin / Official Sheet: http://localhost:${PORT}`);
-  console.log(`📱 Mobile Attendance URL:  http://${lanIp}:${PORT}/attend`);
-  console.log(`=======================================================`);
-});
+// Start server when run directly
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, '0.0.0.0', () => {
+    const lanIp = getLocalNetworkIp();
+    console.log(`=======================================================`);
+    console.log(`🚀 QR Attendance System is live and listening!`);
+    console.log(`📋 Admin / Official Sheet: http://localhost:${PORT}`);
+    console.log(`📱 Mobile Attendance URL:  http://${lanIp}:${PORT}/attend`);
+    console.log(`=======================================================`);
+  });
+}
+
+module.exports = app;
