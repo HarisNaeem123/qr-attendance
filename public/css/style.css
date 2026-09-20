@@ -338,6 +338,30 @@ body {
   background-color: #f8fafc;
 }
 
+.attendees-table td.col-action {
+  text-align: center;
+  padding: 2px 4px;
+}
+
+.btn-delete-row {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #94a3b8;
+  border-radius: 4px;
+  padding: 4px 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.btn-delete-row:hover {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+
 .empty-placeholder {
   text-align: center;
   padding: 30px;

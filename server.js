@@ -79,7 +79,6 @@ function loadData() {
       employer: "AD Ports Groups",
       consultant: "KN International Architect and Engineers LLC.",
       contractor: "Desert Man Transporting & Contracting L.L.C",
-      meetingRefNo: "DMTC - CSR Initiative Housekeeping Campaign",
       meetingTitle: "DMTC - CSR Initiative Housekeeping Campaign",
       meetingDate: "21 Sep- 2026",
       meetingTime: "9:00 AM",
@@ -176,6 +175,20 @@ app.post('/api/attendees', (req, res) => {
   });
 });
 
+// Sync / restore attendees endpoint
+app.post('/api/attendees/sync', (req, res) => {
+  const { attendees } = req.body;
+  if (!Array.isArray(attendees)) {
+    return res.status(400).json({ error: 'attendees must be an array' });
+  }
+
+  const data = loadData();
+  data.attendees = attendees;
+  saveData(data);
+
+  res.json({ success: true, count: data.attendees.length });
+});
+
 app.delete('/api/attendees/:id', (req, res) => {
   const data = loadData();
   const initialLength = data.attendees.length;
@@ -241,7 +254,7 @@ app.post('/api/reset', (req, res) => {
       {
         id: "att-5",
         name: "Gul Yar",
-        designation: "HSSE",
+        designation: "Foreman",
         organization: "DMTC",
         email: "gul.yar@desertmangt.com",
         phone: "0545869133",

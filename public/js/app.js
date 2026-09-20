@@ -34,31 +34,82 @@ async function fetchMeetingInfo() {
 }
 
 function renderMeetingInfo(meeting) {
-  document.getElementById('metaProjectName').textContent = meeting.projectName || '—';
-  document.getElementById('metaEmployer').textContent = meeting.employer || '—';
-  document.getElementById('metaConsultant').textContent = meeting.consultant || '—';
-  document.getElementById('metaContractor').textContent = meeting.contractor || '—';
-  document.getElementById('metaMeetingRefNo').textContent = meeting.meetingRefNo || '—';
+  const elProject = document.getElementById('metaProjectName');
+  if (elProject) elProject.textContent = meeting.projectName || '—';
 
-  document.getElementById('metaMeetingTitle').textContent = meeting.meetingTitle || '—';
-  document.getElementById('metaMeetingDate').textContent = meeting.meetingDate || '—';
-  document.getElementById('metaMeetingTime').textContent = meeting.meetingTime || '—';
-  document.getElementById('metaMeetingOrganizer').textContent = meeting.meetingOrganizer || '—';
+  const elEmployer = document.getElementById('metaEmployer');
+  if (elEmployer) elEmployer.textContent = meeting.employer || '—';
+
+  const elConsultant = document.getElementById('metaConsultant');
+  if (elConsultant) elConsultant.textContent = meeting.consultant || '—';
+
+  const elContractor = document.getElementById('metaContractor');
+  if (elContractor) elContractor.textContent = meeting.contractor || '—';
+
+  const elTitle = document.getElementById('metaMeetingTitle');
+  if (elTitle) elTitle.textContent = meeting.meetingTitle || '—';
+
+  const elDate = document.getElementById('metaMeetingDate');
+  if (elDate) elDate.textContent = meeting.meetingDate || '—';
+
+  const elTime = document.getElementById('metaMeetingTime');
+  if (elTime) elTime.textContent = meeting.meetingTime || '—';
+
+  const elOrganizer = document.getElementById('metaMeetingOrganizer');
+  if (elOrganizer) elOrganizer.textContent = meeting.meetingOrganizer || '—';
 
   const qrTitle = document.getElementById('qrCardMeetingTitle');
   if (qrTitle) qrTitle.textContent = meeting.meetingTitle || 'Record Attendance';
 }
 
-// Fetch Attendees List
+// Fetch Attendees List with automatic persistence & recovery
 async function fetchAttendees() {
   try {
     const res = await fetch('/api/attendees');
     if (!res.ok) throw new Error('Failed to load attendees');
-    const attendees = await res.json();
-    currentAttendees = attendees;
-    renderAttendeesTable(attendees);
+    let attendees = await res.json();
+
+    const isCleared = localStorage.getItem('qr_attendance_cleared') === 'true';
+    const cached = localStorage.getItem('qr_attendance_attendees');
+
+    // If server has records, update local storage cache
+    if (attendees && attendees.length > 0) {
+      currentAttendees = attendees;
+      localStorage.setItem('qr_attendance_attendees', JSON.stringify(attendees));
+      localStorage.removeItem('qr_attendance_cleared');
+    } else if (!isCleared && cached) {
+      // Server returned empty, but client has persistent saved attendees (e.g. server restart/wake-up)
+      try {
+        const cachedList = JSON.parse(cached);
+        if (Array.isArray(cachedList) && cachedList.length > 0) {
+          currentAttendees = cachedList;
+          // Auto-sync back to server
+          await fetch('/api/attendees/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ attendees: cachedList })
+          });
+        } else {
+          currentAttendees = [];
+        }
+      } catch (e) {
+        currentAttendees = [];
+      }
+    } else {
+      currentAttendees = [];
+    }
+
+    renderAttendeesTable(currentAttendees);
   } catch (err) {
     console.error('Error fetching attendees:', err);
+    // Fallback to local cache if network error
+    const cached = localStorage.getItem('qr_attendance_attendees');
+    if (cached) {
+      try {
+        currentAttendees = JSON.parse(cached);
+        renderAttendeesTable(currentAttendees);
+      } catch (e) {}
+    }
   }
 }
 
@@ -77,6 +128,8 @@ async function fetchAttendeesSilently() {
         showToast(`✨ New attendance recorded: ${latest.name}`);
       }
       currentAttendees = attendees;
+      localStorage.setItem('qr_attendance_attendees', JSON.stringify(attendees));
+      localStorage.removeItem('qr_attendance_cleared');
       renderAttendeesTable(attendees);
     }
   } catch (err) {
@@ -92,7 +145,7 @@ function renderAttendeesTable(attendees) {
   if (!attendees || attendees.length === 0) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td colspan="7" class="empty-placeholder">
+      <td colspan="8" class="empty-placeholder">
         No attendance records yet. Scan the QR code with a mobile device to submit attendance!
       </td>
     `;
@@ -122,11 +175,31 @@ function renderAttendeesTable(attendees) {
       <td class="col-email">${escapeHtml(att.email || '—')}</td>
       <td class="col-phone">${escapeHtml(att.phone || '—')}</td>
       <td class="col-sig">${sigHtml}</td>
+      <td class="col-action no-print">
+        <button class="btn-delete-row" title="Delete record" onclick="deleteSingleAttendee('${att.id}', '${escapeHtml(att.name)}')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+        </button>
+      </td>
     `;
 
     tbody.appendChild(tr);
   });
 }
+
+// Delete single attendee function
+window.deleteSingleAttendee = async function(id, name) {
+  if (!confirm(`Are you sure you want to delete attendance record for "${name}"?`)) return;
+  try {
+    const res = await fetch(`/api/attendees/${id}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Delete failed');
+    currentAttendees = currentAttendees.filter(a => a.id !== id);
+    localStorage.setItem('qr_attendance_attendees', JSON.stringify(currentAttendees));
+    renderAttendeesTable(currentAttendees);
+    showToast(`Deleted record for ${name}`);
+  } catch (err) {
+    alert('Failed to delete attendee: ' + err.message);
+  }
+};
 
 // Initialize QR Code
 async function initQrCode(overrideUrl = null) {
@@ -236,7 +309,6 @@ function setupEventListeners() {
     document.getElementById('inputEmployer').value = currentMeeting.employer || '';
     document.getElementById('inputConsultant').value = currentMeeting.consultant || '';
     document.getElementById('inputContractor').value = currentMeeting.contractor || '';
-    document.getElementById('inputMeetingRefNo').value = currentMeeting.meetingRefNo || '';
 
     document.getElementById('inputMeetingTitle').value = currentMeeting.meetingTitle || '';
     document.getElementById('inputMeetingDate').value = currentMeeting.meetingDate || '';
@@ -260,7 +332,6 @@ function setupEventListeners() {
       employer: document.getElementById('inputEmployer').value.trim(),
       consultant: document.getElementById('inputConsultant').value.trim(),
       contractor: document.getElementById('inputContractor').value.trim(),
-      meetingRefNo: document.getElementById('inputMeetingRefNo').value.trim(),
       meetingTitle: document.getElementById('inputMeetingTitle').value.trim(),
       meetingDate: document.getElementById('inputMeetingDate').value.trim(),
       meetingTime: document.getElementById('inputMeetingTime').value.trim(),
@@ -305,6 +376,7 @@ function setupEventListeners() {
         body: JSON.stringify({ mode: 'sample' })
       });
       if (res.ok) {
+        localStorage.removeItem('qr_attendance_cleared');
         await fetchAttendees();
         resetModal.classList.remove('active');
         showToast('PDF reference attendees restored!');
@@ -324,7 +396,10 @@ function setupEventListeners() {
         body: JSON.stringify({ mode: 'clear' })
       });
       if (res.ok) {
-        await fetchAttendees();
+        localStorage.setItem('qr_attendance_cleared', 'true');
+        localStorage.removeItem('qr_attendance_attendees');
+        currentAttendees = [];
+        renderAttendeesTable([]);
         resetModal.classList.remove('active');
         showToast('All attendee records cleared for fresh session.');
       }
