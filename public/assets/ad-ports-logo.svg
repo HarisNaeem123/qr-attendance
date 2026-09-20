@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 90" width="280" height="90">
+  <g transform="translate(10, 8)">
+    <!-- AD Ports Iconic Symbol -->
+    <g transform="translate(0, 5)">
+      <!-- Nautical / Anchor / Modern Port Emblem -->
+      <path d="M22 6 C15 6, 8 13, 8 22 C8 32, 22 45, 22 45 C22 45, 36 32, 36 22 C36 13, 29 6, 22 6 Z" fill="#003A70"/>
+      <circle cx="22" cy="22" r="7" fill="#FFFFFF"/>
+      <circle cx="22" cy="22" r="3.5" fill="#00A3E0"/>
+      <!-- Dynamic Wave Curves -->
+      <path d="M4 36 C4 48, 14 58, 22 62 C30 58, 40 48, 40 36" fill="none" stroke="#003A70" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M12 43 C15 50, 22 53, 22 53 C22 53, 29 50, 32 43" fill="none" stroke="#00A3E0" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="22" y1="52" x2="22" y2="67" stroke="#003A70" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="14" y1="67" x2="30" y2="67" stroke="#003A70" stroke-width="3.5" stroke-linecap="round"/>
+    </g>
+
+    <!-- Typography -->
+    <g transform="translate(56, 12)">
+      <!-- Arabic Text -->
+      <text x="0" y="22" font-family="'Segoe UI', 'Tajawal', Arial, sans-serif" font-size="18" font-weight="700" fill="#003A70" direction="rtl" text-anchor="start">
+        مجموعة موانئ أبوظبي
+      </text>
+      <!-- English Text -->
+      <text x="0" y="44" font-family="'Segoe UI', 'Montserrat', Arial, sans-serif" font-size="14.5" font-weight="800" letter-spacing="1.2" fill="#003A70">
+        AD PORTS GROUP
+      </text>
+    </g>
+  </g>
+</svg>

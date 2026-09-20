@@ -1,0 +1,328 @@
+/* Attendee Mobile Submission Form Styling */
+:root {
+  --primary: #003a70;
+  --primary-hover: #002850;
+  --secondary: #2563eb;
+  --accent-gold: #f2a900;
+  --bg-dark: #0f172a;
+  --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  --card-bg: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --border-color: #cbd5e1;
+  --border-focus: #003a70;
+  --shadow-card: 0 12px 32px rgba(0, 58, 112, 0.12);
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg-gradient);
+  color: var(--text-main);
+  min-height: 100vh;
+  padding: 16px 12px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  -webkit-font-smoothing: antialiased;
+}
+
+.attendee-container {
+  width: 100%;
+  max-width: 540px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+/* Header & Logos */
+.attendee-header {
+  background: #ffffff;
+  padding: 18px 20px 14px;
+  border-bottom: 2px solid var(--primary);
+  text-align: center;
+}
+
+.logos-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f1f5f9;
+  gap: 16px;
+}
+
+.logos-row img.ad-ports {
+  height: auto;
+  max-height: 52px;
+  max-width: 48%;
+  object-fit: contain;
+}
+
+.logos-row img.kn-dmtc {
+  height: auto;
+  max-height: 48px;
+  max-width: 48%;
+  object-fit: contain;
+}
+
+.meeting-badge {
+  display: inline-block;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.form-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.meeting-name-display {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 4px;
+}
+
+.project-name-display {
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* Form Area */
+.attendee-form {
+  padding: 22px 20px 24px;
+}
+
+.form-field {
+  margin-bottom: 16px;
+}
+
+.field-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+.field-label .required {
+  color: #e11d48;
+}
+
+.input-control {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 14px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #0f172a;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.input-control:focus {
+  background: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 58, 112, 0.15);
+}
+
+select.input-control {
+  cursor: pointer;
+}
+
+.field-hint {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* Signature Pad Canvas */
+.signature-box {
+  border: 1.5px solid var(--border-color);
+  border-radius: 8px;
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.signature-canvas {
+  width: 100%;
+  height: 140px;
+  display: block;
+  touch-action: none;
+  cursor: crosshair;
+  background: #ffffff;
+}
+
+.signature-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+.signature-tip {
+  font-size: 11.5px;
+  color: #64748b;
+}
+
+.btn-clear-sig {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.btn-clear-sig:hover {
+  background: #fee2e2;
+}
+
+/* Submit Button */
+.btn-submit {
+  width: 100%;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #003a70 0%, #00264d 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 58, 112, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  transition: all 0.2s;
+}
+
+.btn-submit:hover {
+  background: #002244;
+  box-shadow: 0 6px 16px rgba(0, 58, 112, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-submit:active {
+  transform: translateY(0);
+}
+
+.btn-submit:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Success Confirmation Screen */
+.success-screen {
+  display: none;
+  padding: 36px 20px;
+  text-align: center;
+}
+
+.success-screen.active {
+  display: block;
+}
+
+.success-icon-wrapper {
+  width: 72px;
+  height: 72px;
+  background: #dcfce7;
+  color: #15803d;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  box-shadow: 0 0 0 10px #f0fdf4;
+}
+
+.success-screen h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.success-screen p {
+  font-size: 13.5px;
+  color: #475569;
+  margin-bottom: 20px;
+}
+
+.receipt-card {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 13px;
+  border-bottom: 1px dashed #cbd5e1;
+}
+
+.receipt-row:last-child {
+  border-bottom: none;
+}
+
+.receipt-label {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.receipt-value {
+  color: #0f172a;
+  font-weight: 700;
+  text-align: right;
+}
+
+.btn-new-entry {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-new-entry:hover {
+  background: #e2e8f0;
+}

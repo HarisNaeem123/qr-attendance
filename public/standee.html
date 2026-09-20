@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance QR Code Standee / Poster</title>
+  <link rel="icon" href="assets/dmtc-logo.svg" type="image/svg+xml">
+  <style>
+    :root {
+      --primary: #003a70;
+      --text: #0f172a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      background: #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+      min-height: 100vh;
+    }
+    .actions-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary { background: #003a70; color: #fff; }
+    .btn-primary:hover { background: #00264d; }
+    .btn-download { background: #10b981; color: #fff; }
+    .btn-download:hover { background: #059669; }
+    .btn-back { background: #64748b; color: #fff; }
+    .btn-back:hover { background: #475569; }
+
+    /* The Poster Card */
+    .standee-poster {
+      background: #ffffff;
+      width: 100%;
+      max-width: 580px;
+      border: 3px solid #003a70;
+      border-radius: 16px;
+      padding: 32px 28px;
+      box-shadow: 0 16px 36px rgba(0, 58, 112, 0.15);
+      text-align: center;
+    }
+    .logos-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #003a70;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+    .logos-header img.ad-ports {
+      height: 58px;
+      max-width: 240px;
+      object-fit: contain;
+    }
+    .logos-header img.kn-dmtc {
+      height: 52px;
+      max-width: 220px;
+      object-fit: contain;
+    }
+    .badge {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 14px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 4px;
+    }
+    .project-subtitle {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+    .qr-frame {
+      display: inline-block;
+      background: #ffffff;
+      padding: 18px;
+      border: 2px solid #cbd5e1;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      margin: 10px 0 20px;
+    }
+    .qr-frame img {
+      width: 280px;
+      height: 280px;
+      display: block;
+    }
+    .instructions {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 12px;
+    }
+    .url-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-family: monospace;
+      font-size: 13.5px;
+      color: #003a70;
+      font-weight: 700;
+    }
+    .footer-note {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #64748b;
+      border-top: 1px dashed #cbd5e1;
+      padding-top: 14px;
+    }
+
+    @media print {
+      body { background: #fff !important; padding: 0 !important; }
+      .actions-bar, .no-print { display: none !important; }
+      .standee-poster {
+        border: 3px solid #003a70 !important;
+        box-shadow: none !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        padding: 24px !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="actions-bar no-print">
+    <button class="btn btn-primary" onclick="window.print()">
+      🖨️ Print Standee / Save PDF
+    </button>
+    <a class="btn btn-download" href="attendance_qr_code.png" download="attendance_qr_code.png">
+      ⬇️ Download QR Image (PNG)
+    </a>
+    <a class="btn btn-back" href="/">
+      📋 Back to Attendance Sheet
+    </a>
+  </div>
+
+  <div class="standee-poster">
+    <!-- Logos: AD Ports / KEZAD on Left, KN & DMTC on Right -->
+    <div class="logos-header">
+      <img src="assets/ad-ports-kezad.jpg" alt="AD Ports Group / KEZAD" class="ad-ports">
+      <img src="assets/kn-dmtc-logo.jpg" alt="KN International & DMTC" class="kn-dmtc">
+    </div>
+
+    <div class="badge">Official Attendance Registration</div>
+    <h1>Scan to Record Attendance</h1>
+    <h2 id="posterMeetingTitle">Summer Safety Arrangements Audit Opening Meeting</h2>
+    <div class="project-subtitle" id="posterProject">Al Rahayel Stormwater Network Extension</div>
+
+    <div class="qr-frame">
+      <img id="posterQrImage" src="attendance_qr_code.png" alt="Scan QR Code to Attend">
+    </div>
+
+    <div class="instructions">
+      📸 Open your phone's camera and scan the QR code above
+    </div>
+
+    <div class="url-chip">
+      <span>🔗</span>
+      <span id="posterUrlText">http://192.168.100.5:3000/attend</span>
+    </div>
+
+    <div class="footer-note">
+      Upon scanning, enter your Full Name, Designation, and sign digitally.<br>
+      Your attendance will immediately appear on the official record.
+    </div>
+  </div>
+
+  <script>
+    // Fetch meeting details dynamically
+    fetch('/api/meeting')
+      .then(res => res.json())
+      .then(data => {
+        if (data.meetingTitle) document.getElementById('posterMeetingTitle').textContent = data.meetingTitle;
+        if (data.projectName) document.getElementById('posterProject').textContent = data.projectName;
+      });
+    fetch('/api/server-info')
+      .then(res => res.json())
+      .then(info => {
+        if (info.attendUrl) {
+          document.getElementById('posterUrlText').textContent = info.attendUrl;
+        }
+      });
+  </script>
+</body>
+</html>

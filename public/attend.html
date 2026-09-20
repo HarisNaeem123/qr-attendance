@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Record of Attendance - Check In</title>
+  <link rel="stylesheet" href="css/attend.css">
+  <link rel="icon" href="assets/dmtc-logo.svg" type="image/svg+xml">
+</head>
+<body>
+
+  <div class="attendee-container">
+    
+    <!-- Header with 3 Logos matching Reference Document -->
+    <header class="attendee-header">
+      <div class="logos-row">
+        <img src="assets/ad-ports-kezad.jpg" alt="AD Ports Group / KEZAD" class="ad-ports">
+        <img src="assets/kn-dmtc-logo.jpg" alt="KN International & DMTC" class="kn-dmtc">
+      </div>
+      <div class="meeting-badge">Official Sign-In Portal</div>
+      <h1 class="form-title">RECORD OF ATTENDANCE</h1>
+      <div class="meeting-name-display" id="displayMeetingTitle">Summer Safety Arrangements Audit Opening Meeting</div>
+      <div class="project-name-display" id="displayProjectName">Al Rahayel Stormwater Network Extension</div>
+    </header>
+
+    <!-- Submission Form -->
+    <form id="attendanceForm" class="attendee-form">
+      
+      <!-- Full Name -->
+      <div class="form-field">
+        <label class="field-label" for="fullName">
+          <span>Full Name</span>
+          <span class="required">* Required</span>
+        </label>
+        <input type="text" id="fullName" class="input-control" placeholder="Enter your full name" required autocomplete="name">
+      </div>
+
+      <!-- Designation -->
+      <div class="form-field">
+        <label class="field-label" for="designationSelect">
+          <span>Designation / Role</span>
+          <span class="required">* Required</span>
+        </label>
+        <select id="designationSelect" class="input-control" required>
+          <option value="" disabled selected>Select your designation...</option>
+          <option value="RE">RE (Resident Engineer)</option>
+          <option value="HSEE">HSEE (Health, Safety & Environment Engineer)</option>
+          <option value="PM">PM (Project Manager)</option>
+          <option value="CM">CM (Construction Manager)</option>
+          <option value="HSSE">HSSE (Health, Safety, Security & Environment)</option>
+          <option value="HSEO">HSEO (Health & Safety Officer)</option>
+          <option value="QA/QC">QA/QC (Quality Assurance / Quality Control)</option>
+          <option value="QS">QS (Quantity Surveyor)</option>
+          <option value="Gen Foreman">Gen Foreman (General Foreman)</option>
+          <option value="Site Engineer">Site Engineer</option>
+          <option value="Auditor">Auditor</option>
+          <option value="Inspector">Inspector</option>
+          <option value="Other">Other (Enter below)</option>
+        </select>
+        <input type="text" id="customDesignation" class="input-control" placeholder="Specify your designation" style="display: none; margin-top: 8px;">
+      </div>
+
+      <!-- Organization -->
+      <div class="form-field">
+        <label class="field-label" for="orgSelect">
+          <span>Organization / Company</span>
+          <span class="required">* Required</span>
+        </label>
+        <select id="orgSelect" class="input-control" required>
+          <option value="" disabled selected>Select your organization...</option>
+          <option value="KN International">KN International</option>
+          <option value="DMTC">DMTC (Desert Man Transporting & Contracting)</option>
+          <option value="AD Ports Groups">AD Ports Groups</option>
+          <option value="Other">Other (Enter below)</option>
+        </select>
+        <input type="text" id="customOrg" class="input-control" placeholder="Specify company/organization name" style="display: none; margin-top: 8px;">
+      </div>
+
+      <!-- Email Address -->
+      <div class="form-field">
+        <label class="field-label" for="email">
+          <span>Email Address</span>
+        </label>
+        <input type="email" id="email" class="input-control" placeholder="e.g. name@company.com" autocomplete="email">
+      </div>
+
+      <!-- Phone Number -->
+      <div class="form-field">
+        <label class="field-label" for="phone">
+          <span>Phone / Mobile #</span>
+        </label>
+        <input type="tel" id="phone" class="input-control" placeholder="e.g. 0501234567" autocomplete="tel">
+      </div>
+
+      <!-- Digital Signature Pad -->
+      <div class="form-field">
+        <label class="field-label">
+          <span>Digital Signature</span>
+          <span class="required">* Required</span>
+        </label>
+        <div class="signature-box">
+          <canvas id="signatureCanvas" class="signature-canvas"></canvas>
+          <div class="signature-footer">
+            <span class="signature-tip">✍️ Sign with finger or stylus</span>
+            <button type="button" id="btnClearSignature" class="btn-clear-sig">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" id="btnSubmitAttendance" class="btn-submit">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Submit Attendance
+      </button>
+
+    </form>
+
+    <!-- Confirmation Success Screen -->
+    <div id="successScreen" class="success-screen">
+      <div class="success-icon-wrapper">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <h2>Attendance Recorded!</h2>
+      <p>Your attendance has been added to the official meeting record.</p>
+
+      <div class="receipt-card">
+        <div class="receipt-row">
+          <span class="receipt-label">Attendee Name</span>
+          <span class="receipt-value" id="receiptName">—</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Designation</span>
+          <span class="receipt-value" id="receiptDesignation">—</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Organization</span>
+          <span class="receipt-value" id="receiptOrg">—</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Date & Time</span>
+          <span class="receipt-value" id="receiptTimestamp">—</span>
+        </div>
+        <div class="receipt-row">
+          <span class="receipt-label">Meeting</span>
+          <span class="receipt-value" id="receiptMeeting">—</span>
+        </div>
+      </div>
+
+      <button type="button" id="btnSubmitAnother" class="btn-new-entry">
+        Submit Another Attendee
+      </button>
+    </div>
+
+  </div>
+
+  <script src="js/attend.js"></script>
+</body>
+</html>
