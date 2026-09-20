@@ -79,8 +79,8 @@ function loadData() {
       employer: "AD Ports Groups",
       consultant: "KN International Architect and Engineers LLC.",
       contractor: "Desert Man Transporting & Contracting L.L.C",
-      meetingRefNo: "Summer Safety Arrangements and Welfare Audit Opening Meeting",
-      meetingTitle: "Summer Safety Arrangements Audit Opening Meeting",
+      meetingRefNo: "DMTC - CSR Initiative Housekeeping Campaign",
+      meetingTitle: "DMTC - CSR Initiative Housekeeping Campaign",
       meetingDate: "21 Sep- 2026",
       meetingTime: "9:00 AM",
       meetingOrganizer: "Mukhtiar Hussain"
